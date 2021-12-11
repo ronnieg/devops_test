@@ -1,0 +1,26 @@
+{{- $files := .Files.Glob "dashboards/*.json" }}
+{{- if $files }}
+apiVersion: v1
+kind: ConfigMapList
+items:
+{{- range $path, $fileContents := $files }}
+{{- $providerNameRegex := "^[A-Za-z0-9-]+$" }}
+{{- $providerName  := regexReplaceAll "(^.*/)(.*)\\.(.*)\\.json$" $path "${2}" }}
+{{- $dashboardName := regexReplaceAll "(^.*/)(.*)\\.(.*)\\.json$" $path "${3}" }}
+{{- if not (mustRegexMatch "^[A-Za-z0-9-]+$" $providerName) }}
+{{- printf "Please check dashboard Provider name: \"%s\". Allowed regex: %s" $providerName $providerNameRegex | fail -}}
+{{- end }}
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: {{ printf "%s-%s" $.Chart.Name $dashboardName | trunc 63 | trimSuffix "-" }}
+    namespace: {{ $.Release.Namespace }}
+    labels:
+      {{ $.Values.grafana.sidecar.dashboards.label }}: "1"
+      app: {{ $.Chart.Name }}
+    annotations:
+      k8s-sidecar-target-directory: "{{ $.Values.grafana.sidecar.dashboards.folder }}/{{ $providerName }}"
+  data:
+    {{ $dashboardName }}.json: {{ $.Files.Get $path | toJson }}
+{{- end }}
+{{- end }}

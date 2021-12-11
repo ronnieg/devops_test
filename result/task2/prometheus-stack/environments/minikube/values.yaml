@@ -1,0 +1,31 @@
+common:
+  ingress:
+    ingressClassName: nginx # required from k8s v1.18
+
+prometheus:
+  service:
+    port: 9090
+  ingress:
+    host: prometheus.local
+    annotations: {}
+    tls: []
+  pvc:
+    storageClassName: standard
+    accessModes: ["ReadWriteOnce"]
+    storage: 2Gi
+
+  retention: "5d"
+  retentionSize:  "1.9GB"
+  disableCompaction: true
+
+alertmanager:
+  ingress:
+    host: alertmanager.local
+    annotations: {}
+    tls: []
+
+grafana:
+  ingress:
+    host: grafana.local
+    annotations: {}
+    tls: []

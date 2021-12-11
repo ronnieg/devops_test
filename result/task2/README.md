@@ -13,7 +13,6 @@ Demonstrate monitoring of relevant results & metrics for normal app behavior and
 | Docker| 20.10.8+ | Docker Desktop for local image build | TBD |
 | minikube | v1.23.0 | Kubernetes runtime for local machine | TBD |
 | helm | v3.7.2 | Kubernets manifests and templates manager | TBD |
-| skaffold | 1.9.1 | Dev tool for faster inner loop | TBD |
 | kubectl | 1.22.1 | Kubernetes control tool| TBD |
 | helmfile | v0.142.0+ | Helm compose tool | TBD |
 
@@ -55,8 +54,9 @@ kubectl port-forward dummy-webservice 8080:8080
 **Run Minikube**
 ```bash
 minikube start \
+-p aged --kubernetes-version=v1.19.0 \
 --cpus=2 --memory=2gb --disk-size=5gb
-minikube addons enable ingress
+minikube -p aged addons enable ingress
 ```
 **Install cert-manager**
 ```bash
@@ -66,3 +66,14 @@ kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release
 
 2. Install monitring
 
+**Debug**
+```bash
+cd ~/devops_test/result/task2/prometheus-stack/
+helmfile -f helmfile.yaml -n monitoring -e minikube template --args --debug
+```
+
+**Install**
+```bash
+cd ~/devops_test/result/task2/prometheus-stack/
+helmfile -f helmfile.yaml -n monitoring -e minikube sync
+```

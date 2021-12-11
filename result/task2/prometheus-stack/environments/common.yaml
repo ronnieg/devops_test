@@ -1,0 +1,23 @@
+common:
+  ingress:
+    enabled: true
+
+kubePrometheus:
+  releaseName: kube-prometheus
+  chartVersion: 14.4.0
+
+grafanaDashboards:
+  releaseName: grafana-dashboards
+  sidecar:
+    dashboards:
+      enabled: true
+      label: "grafana_dashboard"
+      folder: /tmp/dashboards
+      provider: 
+        foldersFromFilesStructure: true
+
+prometheusRules:
+  releaseName: prometheus-rules
+
+alertmanagerConfig:
+  releaseName: alertmanager-config

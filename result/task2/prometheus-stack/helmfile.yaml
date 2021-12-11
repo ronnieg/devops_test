@@ -1,0 +1,79 @@
+repositories:
+- name: prometheus-community
+  url: https://prometheus-community.github.io/helm-charts
+
+- name: stable
+  url: https://charts.helm.sh/stable
+
+- name: grafana
+  url: https://grafana.github.io/helm-charts
+
+helmDefaults:
+  createNamespace: true
+  verify: false
+  wait: true
+  timeout: 300
+  force: false
+
+environments:
+  minikube:
+    values:
+    - environments/common.yaml
+    - environments/{{ .Environment.Name }}/values.yaml
+    missingFileHandler: Error
+  eks_CI-DEV-03:
+    values:
+    - environments/common.yaml
+    - environments/{{ .Environment.Name }}/values.yaml
+    missingFileHandler: Error
+
+releases:
+  - name: {{ .Values.kubePrometheus.releaseName }}                            
+    namespace: {{ .Namespace }}                       
+    labels:                                
+      service: prometheus-stack
+    chart: prometheus-community/kube-prometheus-stack    
+    version: {{ .Values.kubePrometheus.chartVersion }}                      
+    values:
+      - values/kubePrometheus/kubePrometheus.yaml.gotmpl
+    missingFileHandler: Error
+    installed: true
+    atomic: true
+    cleanupOnFail: false
+    hooks:
+    {{- if eq .Environment.Name "minikube" }}
+    - events: ["postsync"]
+      showlogs: true
+      command: "bash"
+      args: ["scripts/minikube_setup_ingress.sh", "postsync", "{{`{{ .Values.prometheus.ingress.host }}`}} {{`{{ .Values.alertmanager.ingress.host }}`}} {{`{{ .Values.grafana.ingress.host }}`}}"]
+    - events: ["postuninstall"]
+      showlogs: true
+      command: "bash"
+      args: ["scripts/minikube_setup_ingress.sh", "postuninstall", "{{`{{ .Values.prometheus.ingress.host }}`}} {{`{{ .Values.alertmanager.ingress.host }}`}} {{`{{ .Values.grafana.ingress.host }}`}}"]
+    {{- end }}
+
+  - name: {{ .Values.grafanaDashboards.releaseName }}
+    namespace: {{ .Namespace }}
+    labels:
+      service: prometheus-stack
+    chart: ./helmCharts/grafana-dashboards
+    values:
+      - values/kubePrometheus/kubePrometheus.yaml.gotmpl
+      - environments/common.yaml
+    missingFileHandler: Error
+    installed: true
+    atomic: true
+    cleanupOnFail: false
+
+  - name: {{ .Values.prometheusRules.releaseName }}
+    namespace: {{ .Namespace }}
+    labels:
+      service: prometheus-stack
+    chart: ./helmCharts/prometheus-rules
+    values:
+      - values/kubePrometheus/kubePrometheus.yaml.gotmpl
+      - environments/common.yaml
+    missingFileHandler: Error
+    installed: true
+    atomic: true
+    cleanupOnFail: false

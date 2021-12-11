@@ -1,0 +1,1 @@
+{{ .Chart.Name }}: you are all set! Check your Grafana UI for dashboards.

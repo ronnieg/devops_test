@@ -1,0 +1,76 @@
+fullnameOverride: {{ .Values.kubePrometheus.releaseName }} 
+
+prometheus:
+  prometheusSpec:
+    disableCompaction: {{ .Values.prometheus.disableCompaction }}
+    retention: {{ .Values.prometheus.retention }}
+    retentionSize: {{ .Values.prometheus.retentionSize }}
+    storageSpec: 
+      volumeClaimTemplate:
+        spec:
+          storageClassName: {{ .Values.prometheus.pvc.storageClassName }}
+          accessModes: {{ .Values.prometheus.pvc.accessModes }}
+          resources:
+            requests:
+              storage: {{ .Values.prometheus.pvc.storage }}
+    ruleSelector:
+      matchLabels:
+        release: {{ .Values.kubePrometheus.releaseName }} 
+
+  service:
+    port: {{ .Values.prometheus.service.port }}
+
+  ingress:
+    enabled: {{ .Values.common.ingress.enabled }}
+    {{- if eq .Environment.Name "minikube" }}
+    ingressClassName: {{ .Values.common.ingress.ingressClassName }}
+    {{- end }}
+    annotations: {{- toYaml .Values.prometheus.ingress.annotations | nindent 6 }}
+    labels: {}
+    hosts: 
+      - {{ .Values.prometheus.ingress.host }}
+    paths:
+      - /
+    tls: {{- toYaml .Values.prometheus.ingress.tls | nindent 6 }}
+
+
+alertmanager:
+  alertmanagerSpec:
+    alertmanagerConfigSelector:
+      matchLabels:
+        release: {{ .Values.kubePrometheus.releaseName }}
+
+  ingress:
+    enabled: {{ .Values.common.ingress.enabled }}
+    {{- if eq .Environment.Name "minikube" }}
+    ingressClassName: {{ .Values.common.ingress.ingressClassName }}
+    {{- end }}
+    annotations: {{- toYaml .Values.alertmanager.ingress.annotations | nindent 6 }}
+    labels: {}
+    hosts: 
+      - {{ .Values.alertmanager.ingress.host }}
+    paths:
+      - /
+    tls: {{- toYaml .Values.alertmanager.ingress.tls | nindent 6 }}
+
+grafana:
+  sidecar:
+    dashboards:
+      enabled: {{ .Values.grafanaDashboards.sidecar.dashboards.enabled }}
+      label: {{ .Values.grafanaDashboards.sidecar.dashboards.label }}
+      folder: {{ .Values.grafanaDashboards.sidecar.dashboards.folder }}
+      provider: 
+        foldersFromFilesStructure: {{ .Values.grafanaDashboards.sidecar.dashboards.provider.foldersFromFilesStructure }}
+
+  ingress:
+    enabled: {{ .Values.common.ingress.enabled }}
+    {{- if eq .Environment.Name "minikube" }}
+    ingressClassName: {{ .Values.common.ingress.ingressClassName }}
+    {{- end }}    
+    annotations: {{- toYaml .Values.grafana.ingress.annotations | nindent 6 }}
+    labels: {}
+    hosts: 
+        - {{ .Values.grafana.ingress.host }}
+    paths:
+        - /
+    tls: {{- toYaml .Values.grafana.ingress.tls | nindent 6 }}
