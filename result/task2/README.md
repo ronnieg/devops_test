@@ -50,3 +50,19 @@ kubectl port-forward dummy-webservice 8080:8080
 
 ## Part 2 - Minimal local infrastructure
 
+1. Prepare Environment
+
+**Run Minikube**
+```bash
+minikube start \
+--cpus=2 --memory=2gb --disk-size=5gb
+minikube addons enable ingress
+```
+**Install cert-manager**
+```bash
+kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5.3/cert-manager.yaml
+kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.6/deploy/manifests/00-crds.yaml
+```
+
+2. Install monitring
+
