@@ -88,3 +88,23 @@ helmfile -f helmfile.yaml -n dummy-webservice -e local sync
 
 Result:
 ![Alt text](/result/task2/images/result_1.png?raw=true "Webserver log")
+
+## Part 3 - Monitoring
+If ingress doesn't work, please use port-forwarding.
+
+Pod results:
+![Alt text](/result/task2/images/result_2.png?raw=true "Pod results")
+
+**Grafana**
+Login/password: admin/prom-operator
+
+Dummy-weservice Pod in grafana:
+![Alt text](/result/task2/images/result_3.png?raw=true "Pod in grafana")
+
+Custom dashboard for node-exporter from sources:
+![Alt text](/result/task2/images/result_4.png?raw=true "Custom dashboard")
+
+
+**Prometheus**
+Dummy-weservice Pod in prometheus:
+![Alt text](/result/task2/images/result_5.png?raw=true "Pod in prometheus")
