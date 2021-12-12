@@ -77,3 +77,11 @@ helmfile -f helmfile.yaml -n monitoring -e minikube template --args --debug
 cd ~/devops_test/result/task2/prometheus-stack/
 helmfile -f helmfile.yaml -n monitoring -e minikube sync
 ```
+If ingress doesn't work, please use port-forwarding.
+
+3. Deploy application
+**Install**
+```bash
+cd ~/devops_test/result/task2/dummy-webservice/helm/dummy-webservice/helmfile/
+helmfile -f helmfile.yaml -n dummy-webservice -e local apply
+```

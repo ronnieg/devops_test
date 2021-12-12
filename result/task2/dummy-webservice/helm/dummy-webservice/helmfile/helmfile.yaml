@@ -1,0 +1,25 @@
+repositories: 
+- name: bitnami
+  url: https://charts.bitnami.com/bitnami
+
+helmDefaults:
+  createNamespace: true
+  verify: false
+  wait: true
+  timeout: 1000
+
+environments:
+  local:
+    missingFileHandler: Error
+    values:
+    - common_env.yaml.gotmpl
+
+releases:
+  - name: redis
+    chart: bitnami/redis
+    version: {{ .Values.redis.chartVersion }}
+    labels:
+      chart: redis
+      type: db
+    values:
+    - values/dependencies/redis.yaml.gotmpl
