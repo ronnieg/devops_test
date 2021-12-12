@@ -1,0 +1,18 @@
+name: "dummy-webservice"
+
+image: dummy-webservice:0.0.1
+
+replicas: 1
+
+containerPort: 8080
+
+redisHost: redis-master:6379
+
+service:
+  name: "dummy-webservice"
+  port: 8080
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""

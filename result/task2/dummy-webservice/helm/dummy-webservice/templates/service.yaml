@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  labels:
+    app: dummy-service
+spec:
+  ports:
+  - port: {{ .Values.service.port }}
+    protocol: TCP
+  selector:
+    env: local
+    app: dummy-webservice

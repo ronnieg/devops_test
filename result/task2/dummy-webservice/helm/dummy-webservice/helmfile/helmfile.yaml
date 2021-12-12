@@ -23,3 +23,11 @@ releases:
       type: db
     values:
     - values/dependencies/redis.yaml.gotmpl
+  
+  - name: dummy-webservice
+    chart: "../../../../dummy-webservice/helm/dummy-webservice"
+    labels:
+      chart: dummy-webservice
+      type: web
+    values:
+    - values/defaults/dummy-webservice.yaml.gotmpl

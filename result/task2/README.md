@@ -83,5 +83,8 @@ If ingress doesn't work, please use port-forwarding.
 **Install**
 ```bash
 cd ~/devops_test/result/task2/dummy-webservice/helm/dummy-webservice/helmfile/
-helmfile -f helmfile.yaml -n dummy-webservice -e local apply
+helmfile -f helmfile.yaml -n dummy-webservice -e local sync
 ```
+
+Result:
+![Alt text](/result/task2/images/result_1.png?raw=true "Webserver log")

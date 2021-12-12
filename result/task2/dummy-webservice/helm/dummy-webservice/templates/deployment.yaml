@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      env: local
+      app: dummy-webservice
+  template:
+    metadata:
+      labels:
+         env: local
+         app: dummy-webservice
+    spec: 
+      serviceAccountName: {{ include "dummy-webservice.serviceAccountName" . }}
+      containers:
+        - name: {{ .Values.name }}
+          image: {{ .Values.image }}
+          env:
+          - name: REDIS_ADDR
+            value: {{ .Values.redisHost }}
+          ports:
+          - containerPort: {{ .Values.containerPort }}
+    
