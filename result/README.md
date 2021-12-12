@@ -1,9 +1,9 @@
 # DEVOPS TEST RESULTS
 
-
-## Task 1:
-### [Docker && docker-compose && monitoring](/result/task1/Readme.md)
+## Docker && docker-compose && monitoring
+`~/devops_test/result/task1`
 
 ---
-## Task 2:
-### [Minikube](/result/task2/Readme.md)
+## Minikube
+Results in folder:
+`~/devops_test/result/task2`
