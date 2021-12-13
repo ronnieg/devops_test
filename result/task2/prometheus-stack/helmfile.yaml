@@ -21,11 +21,6 @@ environments:
     - environments/common.yaml
     - environments/{{ .Environment.Name }}/values.yaml
     missingFileHandler: Error
-  eks_CI-DEV-03:
-    values:
-    - environments/common.yaml
-    - environments/{{ .Environment.Name }}/values.yaml
-    missingFileHandler: Error
 
 releases:
   - name: {{ .Values.kubePrometheus.releaseName }}                            
